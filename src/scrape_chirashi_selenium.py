@@ -265,11 +265,9 @@ def scrape_chirashi_data_selenium(input_csv, output_csv):
     print(f"Results saved to: {output_csv}")
 
 if __name__ == "__main__":
-    input_file = "../input/super_list.csv"
-    output_file = "../output/chirashi_data_selenium.csv"
-
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    input_path = os.path.join(script_dir, input_file)
-    output_path = os.path.join(script_dir, output_file)
+    # プロジェクトルートからの相対パスに変更
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    input_path = os.path.join(project_root, "input", "super_list.csv")
+    output_path = os.path.join(project_root, "output", "chirashi_data_selenium.csv")
 
     scrape_chirashi_data_selenium(input_path, output_path)

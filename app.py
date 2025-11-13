@@ -31,10 +31,16 @@ if page == "🏪 スーパー管理":
 
 st.title("🛒 チラシ収集・分析システム")
 
-INPUT_CSV = "/Users/uenomomoka/Desktop/Projects/yukiguni/input/super_list.csv"
-SCRAPED_CSV = "/Users/uenomomoka/Desktop/Projects/yukiguni/output/chirashi_data_selenium.csv"
-OUTPUT_CSV = "/Users/uenomomoka/Desktop/Projects/yukiguni/output/chirashi_data_with_products.csv"
-IMAGE_CACHE_DIR = "/Users/uenomomoka/Desktop/Projects/yukiguni/cache/images"
+# プロジェクトルートからの動的パス設定
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+INPUT_CSV = os.path.join(PROJECT_ROOT, "input", "super_list.csv")
+SCRAPED_CSV = os.path.join(PROJECT_ROOT, "output", "chirashi_data_selenium.csv")
+OUTPUT_CSV = os.path.join(PROJECT_ROOT, "output", "chirashi_data_with_products.csv")
+IMAGE_CACHE_DIR = os.path.join(PROJECT_ROOT, "cache", "images")
+
+# 必要なディレクトリを作成
+os.makedirs(os.path.join(PROJECT_ROOT, "output"), exist_ok=True)
+os.makedirs(IMAGE_CACHE_DIR, exist_ok=True)
 
 if 'processing' not in st.session_state:
     st.session_state.processing = False

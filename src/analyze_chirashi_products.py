@@ -19,9 +19,12 @@ try:
     GEMINI_API_KEY = st.secrets.get("GOOGLE_GEMINI_API_KEY") or os.getenv('GOOGLE_GEMINI_API_KEY')
 except:
     GEMINI_API_KEY = os.getenv('GOOGLE_GEMINI_API_KEY')
-INPUT_CSV_PATH = '/Users/uenomomoka/Desktop/Projects/yukiguni/output/chirashi_data_filtered.csv'
-OUTPUT_CSV_PATH = '/Users/uenomomoka/Desktop/Projects/yukiguni/output/chirashi_data_with_products.csv'
-IMAGE_CACHE_DIR = '/Users/uenomomoka/Desktop/Projects/yukiguni/cache/images'
+
+# プロジェクトルートからの動的パス設定
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+INPUT_CSV_PATH = os.path.join(PROJECT_ROOT, 'output', 'chirashi_data_selenium.csv')
+OUTPUT_CSV_PATH = os.path.join(PROJECT_ROOT, 'output', 'chirashi_data_with_products.csv')
+IMAGE_CACHE_DIR = os.path.join(PROJECT_ROOT, 'cache', 'images')
 
 os.makedirs(IMAGE_CACHE_DIR, exist_ok=True)
 
