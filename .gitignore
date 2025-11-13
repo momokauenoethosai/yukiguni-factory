@@ -1,7 +1,7 @@
 # Environment variables only
 .env
 
-# Streamlit secrets
+# Streamlit secrets (config.toml は含める)
 .streamlit/secrets.toml
 
 # Python cache
