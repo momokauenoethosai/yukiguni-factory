@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  yukiguni-app:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - .env:/app/.env  # 環境変数ファイル
+      - ./output:/app/output  # 出力フォルダ
+      - ./cache:/app/cache    # キャッシュフォルダ
+    environment:
+      - DISPLAY=:99
+    command: >
+      sh -c "
+        Xvfb :99 -screen 0 1920x1080x24 &
+        streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+      "
+    restart: unless-stopped
