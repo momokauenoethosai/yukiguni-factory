@@ -158,57 +158,13 @@ def scrape_chirashi_data_selenium(input_csv, output_csv):
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     stop_flag_file = os.path.join(project_root, "temp_stop_flag.txt")
 
-    # Chrome options for cloud environment
+    # シンプルなChrome設定
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--window-size=1920,1080')
-    options.add_argument('--disable-extensions')
-    options.add_argument('--disable-plugins')
-    options.add_argument('--disable-setuid-sandbox')
-    options.add_argument('--disable-software-rasterizer')
-    options.add_argument('--remote-debugging-port=9222')
 
-    # Streamlit Cloud対応
-    options.add_argument('--single-process')
-    options.add_argument('--disable-background-timer-throttling')
-    options.add_argument('--disable-backgrounding-occluded-windows')
-    options.add_argument('--disable-renderer-backgrounding')
-
-    try:
-        print("🚗 ChromeDriverを初期化中...")
-
-        # Streamlit Cloud環境の検出
-        import platform
-        if platform.system() == "Linux":
-            print("🐧 Linux環境を検出")
-            # webdriver-managerでインストールを試行
-            try:
-                service = Service(ChromeDriverManager().install())
-                driver = webdriver.Chrome(service=service, options=options)
-                print("✅ webdriver-managerでChromeDriver初期化完了")
-            except Exception as e:
-                print(f"⚠️ webdriver-manager失敗: {e}")
-                # フォールバック: システムのChromeDriverを使用
-                try:
-                    driver = webdriver.Chrome(options=options)
-                    print("✅ システムChromeDriverで初期化完了")
-                except Exception as e2:
-                    print(f"❌ ChromeDriver初期化完全失敗: {e2}")
-                    print("💡 Selenium処理をスキップして他の機能を継続します")
-                    return
-        else:
-            # ローカル環境
-            service = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=service, options=options)
-            print("✅ ChromeDriver初期化完了")
-
-    except Exception as e:
-        print(f"❌ ChromeDriver初期化エラー: {e}")
-        print("💡 Selenium処理をスキップして他の機能を継続します")
-        return
+    driver = webdriver.Chrome(options=options)
 
     try:
         with open(input_csv, 'r', encoding='utf-8') as f:

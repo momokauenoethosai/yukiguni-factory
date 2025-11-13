@@ -342,7 +342,7 @@ if st.session_state.processing:
 
 st.divider()
 
-tab1, tab2 = st.tabs(["📊 商品データ", "🖼️ チラシ画像"])
+tab1, tab2, tab3 = st.tabs(["📊 商品データ", "📄 チラシデータ", "🖼️ チラシ画像"])
 
 with tab1:
     st.subheader("📊 収集した商品データ")
@@ -423,6 +423,61 @@ with tab1:
         st.info("データがありません。処理を実行してください。")
 
 with tab2:
+    st.subheader("📄 収集したチラシデータ")
+
+    # チラシ収集データを表示（chirashi_data_selenium.csv）
+    if os.path.exists(SCRAPED_CSV):
+        chirashi_df = pd.read_csv(SCRAPED_CSV)
+
+        if not chirashi_df.empty:
+            # 統計情報
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("総チラシ数", len(chirashi_df))
+            col2.metric("店舗数", chirashi_df['shop_name'].nunique())
+            col3.metric("期間数", chirashi_df['period'].nunique() if 'period' in chirashi_df.columns and chirashi_df['period'].notna().any() else 0)
+            col4.metric("タイトル数", chirashi_df['flyer_title'].nunique() if 'flyer_title' in chirashi_df.columns and chirashi_df['flyer_title'].notna().any() else 0)
+
+            # 最終更新時刻を表示
+            if 'scraped_at' in chirashi_df.columns and not chirashi_df.empty:
+                last_update = chirashi_df['scraped_at'].iloc[0]
+                st.caption(f"最終更新: {last_update}")
+
+            # フィルタ機能
+            if 'flyer_title' in chirashi_df.columns:
+                titles = chirashi_df['flyer_title'].dropna().unique()
+                if len(titles) > 0:
+                    title_filter = st.multiselect(
+                        "🏷️ チラシタイトルでフィルタ",
+                        options=titles,
+                        default=[]
+                    )
+                    if title_filter:
+                        chirashi_df = chirashi_df[chirashi_df['flyer_title'].isin(title_filter)]
+
+            # データテーブル表示
+            st.dataframe(
+                chirashi_df,
+                use_container_width=True,
+                hide_index=True,
+                height=600
+            )
+
+            # ダウンロードボタン
+            csv_data = chirashi_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 チラシデータCSVダウンロード",
+                data=csv_data,
+                file_name=f"chirashi_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+        else:
+            st.info("チラシデータがありません。")
+    elif st.session_state.processing:
+        st.info("🔄 チラシ収集中です...")
+    else:
+        st.info("チラシデータがありません。処理を実行してください。")
+
+with tab3:
     st.subheader("🖼️ 収集したチラシ画像")
 
     if st.session_state.processing:
