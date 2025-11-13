@@ -193,6 +193,12 @@ def process_chirashi_data():
         writer.writeheader()
 
     for idx, row in enumerate(rows_to_process):
+        # 停止フラグをチェック
+        stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
+        if os.path.exists(stop_flag_file):
+            print("⏹️ 停止要求を受信しました。処理を中断します。")
+            break
+
         print(f"\n📋 Processing {idx + 1}/{len(rows_to_process)}: {row['super_name']} - {row['shop_name']}")
         flyer_title = row.get('flyer_title', '')
         period = row.get('period', '')

@@ -72,7 +72,7 @@ with st.sidebar:
 def run_integrated_process():
     """チラシ収集→AI分析の統合処理を実行"""
     # ログファイルに出力
-    log_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_process_log.txt"
+    log_file = os.path.join(PROJECT_ROOT, "temp_process_log.txt")
 
     def write_log(message):
         # 日本時間でログタイムスタンプを生成
@@ -85,7 +85,7 @@ def run_integrated_process():
 
     def check_stop_requested():
         """停止リクエストをチェック（ファイルベース）"""
-        stop_flag_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_stop_flag.txt"
+        stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
         if os.path.exists(stop_flag_file):
             write_log("🛑 ユーザーから停止リクエストを受信しました")
             return True
@@ -134,7 +134,7 @@ def run_integrated_process():
                 if os.path.exists(SCRAPED_CSV):
                     write_log("📊 途中まで収集されたデータを保持します")
                 # 停止フラグファイルをクリア
-                stop_flag_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_stop_flag.txt"
+                stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
                 if os.path.exists(stop_flag_file):
                     os.remove(stop_flag_file)
                 return
@@ -154,7 +154,7 @@ def run_integrated_process():
         if check_stop_requested():
             write_log("⏹️ ステップ2開始前に停止しました")
             # 停止フラグファイルをクリア
-            stop_flag_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_stop_flag.txt"
+            stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
             if os.path.exists(stop_flag_file):
                 os.remove(stop_flag_file)
             return
@@ -165,7 +165,8 @@ def run_integrated_process():
         # スクレイピング結果をAI分析の入力ファイルとしてコピー
         import shutil
         if os.path.exists(SCRAPED_CSV):
-            shutil.copy(SCRAPED_CSV, "/Users/uenomomoka/Desktop/Projects/yukiguni/output/chirashi_data_filtered.csv")
+            filtered_csv = os.path.join(PROJECT_ROOT, "output", "chirashi_data_filtered.csv")
+            shutil.copy(SCRAPED_CSV, filtered_csv)
             write_log("📋 スクレイピング結果をAI分析用に準備しました")
 
         process = subprocess.Popen(
@@ -189,7 +190,7 @@ def run_integrated_process():
                 if os.path.exists(OUTPUT_CSV):
                     write_log("📊 途中まで分析されたデータを保持します")
                 # 停止フラグファイルをクリア
-                stop_flag_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_stop_flag.txt"
+                stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
                 if os.path.exists(stop_flag_file):
                     os.remove(stop_flag_file)
                 return
@@ -225,7 +226,7 @@ with col1:
         st.session_state.stop_requested = False
 
         # 停止フラグファイルを削除
-        stop_flag_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_stop_flag.txt"
+        stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
         if os.path.exists(stop_flag_file):
             os.remove(stop_flag_file)
 
@@ -247,7 +248,7 @@ with col3:
     if st.button("⏹️ 処理を停止", disabled=not st.session_state.processing):
         st.session_state.stop_requested = True
         # 停止フラグファイルを作成
-        stop_flag_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_stop_flag.txt"
+        stop_flag_file = os.path.join(PROJECT_ROOT, "temp_stop_flag.txt")
         with open(stop_flag_file, "w") as f:
             f.write("stop_requested")
         st.warning("⚠️ 停止リクエストを送信しました。処理が安全に停止されるまでお待ちください...")
@@ -259,7 +260,7 @@ if st.session_state.processing:
     log_placeholder = st.empty()
 
     # ログファイルからログを読み込み
-    log_file = "/Users/uenomomoka/Desktop/Projects/yukiguni/temp_process_log.txt"
+    log_file = os.path.join(PROJECT_ROOT, "temp_process_log.txt")
     recent_logs = []
 
     if os.path.exists(log_file):

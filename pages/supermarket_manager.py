@@ -5,7 +5,9 @@ from datetime import datetime
 
 # ページ設定は削除（メインアプリで設定済み）
 
-INPUT_CSV = "/Users/uenomomoka/Desktop/Projects/yukiguni/input/super_list.csv"
+# プロジェクトルートからの動的パス設定
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+INPUT_CSV = os.path.join(PROJECT_ROOT, "input", "super_list.csv")
 
 def load_supermarket_data():
     """スーパーマーケットデータを読み込み"""

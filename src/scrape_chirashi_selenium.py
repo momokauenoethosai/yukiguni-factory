@@ -154,6 +154,10 @@ def scrape_chirashi_data_selenium(input_csv, output_csv):
     jst = pytz.timezone('Asia/Tokyo')
     scraped_at = datetime.now(jst).strftime('%Y-%m-%d %H:%M:%S')
 
+    # プロジェクトルートパスを設定
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    stop_flag_file = os.path.join(project_root, "temp_stop_flag.txt")
+
     # Chrome options for headless mode
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -166,6 +170,11 @@ def scrape_chirashi_data_selenium(input_csv, output_csv):
         with open(input_csv, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                # 停止フラグをチェック
+                if os.path.exists(stop_flag_file):
+                    print("⏹️ 停止要求を受信しました。処理を中断します。")
+                    break
+
                 url = row['url']
                 super_name = row['super_name']
                 shop_name = row['shop_name']
@@ -186,8 +195,8 @@ def scrape_chirashi_data_selenium(input_csv, output_csv):
                     page_source = driver.page_source
 
                     # Save HTML for inspection
-                    html_filename = f"../output/{shop_name}_selenium_response.html"
-                    html_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), html_filename)
+                    html_filename = f"{shop_name}_selenium_response.html"
+                    html_path = os.path.join(project_root, "output", html_filename)
                     with open(html_path, 'w', encoding='utf-8') as html_file:
                         html_file.write(page_source)
                     print(f"HTML saved to: {html_path}")
