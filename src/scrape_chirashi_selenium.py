@@ -163,8 +163,19 @@ def scrape_chirashi_data_selenium(input_csv, output_csv):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-plugins')
 
-    driver = webdriver.Chrome(options=options)
+    try:
+        print("🚗 ChromeDriverを初期化中...")
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+        print("✅ ChromeDriver初期化完了")
+    except Exception as e:
+        print(f"❌ ChromeDriver初期化エラー: {e}")
+        return
 
     try:
         with open(input_csv, 'r', encoding='utf-8') as f:

@@ -219,7 +219,13 @@ def process_chirashi_data():
 
         # チラシメタデータを抽出
         print(f"🔍 チラシ情報抽出中...")
-        image_metadata = extract_flyer_metadata(image_path)
+        try:
+            image_metadata = extract_flyer_metadata(image_path)
+            print(f"🔍 メタデータ抽出完了: {image_metadata}")
+        except Exception as e:
+            print(f"❌ メタデータ抽出エラー: {e}")
+            # デフォルト値で続行
+            image_metadata = {'is_food_flyer': True, 'flyer_title': '', 'period': ''}
 
         if not image_metadata['is_food_flyer']:
             print(f"❌ 非食品チラシのためスキップ")
