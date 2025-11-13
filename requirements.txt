@@ -1,0 +1,10 @@
+google-genai
+python-dotenv
+requests
+streamlit
+pandas
+Pillow
+selenium
+webdriver-manager
+beautifulsoup4
+pytz

@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# Cache and temporary files
+cache/
+temp_*.txt
+*.log
+
+# Output files (for development)
+output/
+*.csv
+*.html
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Chrome driver
+chromedriver*
